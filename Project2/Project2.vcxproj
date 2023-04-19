@@ -127,11 +127,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CitiesGraph.cpp" />
+    <ClCompile Include="City.cpp" />
     <ClCompile Include="Project2.cpp" />
     <ClCompile Include="String.cpp" />
-    <ClCompile Include="Vector.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CitiesGraph.h" />
+    <ClInclude Include="City.h" />
+    <ClInclude Include="HashMap.h" />
+    <ClInclude Include="Parameters.h" />
     <ClInclude Include="String.h" />
     <ClInclude Include="Vector.h" />
   </ItemGroup>
