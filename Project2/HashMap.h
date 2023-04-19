@@ -15,7 +15,7 @@ private:
     int table_size;
     int count;
 
-    int hash(String key);
+    unsigned hash(String key);
 
 public:
     HashMap();
@@ -33,9 +33,9 @@ public:
 
 
 template<typename T>
-inline int HashMap<T>::hash(String key)
+inline unsigned HashMap<T>::hash(String key)
 {
-    int hash = 0;
+    unsigned int hash = 0;
     for (size_t i = 0; i < key.GetLength(); i++) {
         hash = hash * 31 + key[i];
     }

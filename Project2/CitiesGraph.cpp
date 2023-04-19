@@ -27,7 +27,9 @@ CitiesGraph::CitiesGraph(char** map, int h, int w)
 								cityName += map[i + k][tmpX2];
 								tmpX2++;
 							}
-							cities.push_back(new City(cityName, j, i));
+							//cities.push_back(new City(cityName, j, i));
+							cities.putValue(cityName, new City(cityName, j, i));
+							citiesNames.push_back(cityName);
 							break;
 						}
 					}
@@ -39,8 +41,8 @@ CitiesGraph::CitiesGraph(char** map, int h, int w)
 
 void CitiesGraph::printCities()
 {
-	for (int i = 0; i < cities.GetSize(); i++) {
-		std::cout << cities[i]->getName() << " " << cities[i]->getPosX() << " " << cities[i]->getPosY() << std::endl;
+	for (int i = 0; i < citiesNames.GetSize(); i++) {
+		std::cout << cities.getValue(citiesNames[i])->getName() << " " << cities.getValue(citiesNames[i])->getPosX() << " " << cities.getValue(citiesNames[i])->getPosY() << std::endl;
 	}
 }
 

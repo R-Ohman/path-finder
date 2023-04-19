@@ -6,7 +6,8 @@ class City;
 class CitiesGraph
 {
 private:
-	Vector<City*> cities;
+	Vector<String> citiesNames;
+	HashMap<City *> cities;
 	
 	
 public:
