@@ -13,7 +13,10 @@ private:
 public:
 	City();
 	City(String name, int posX, int posY);
+	City(const City& other);
 	~City();
+
+	City& operator=(const City& other);
 
 	int getPosX();
 	int getPosY();
@@ -23,11 +26,13 @@ public:
 	
 	void setDistance(int distance);
 	int getDistance();
+	void increaseNeighboursCount();
 
 	void setNeighboursCount(int neighboursCount);
 	int getNeighboursCount();
+	void addNeighbour(City neighbour);
 	
-	City** neighborus;
+	Vector<City> neighbours;
 	bool visited;
 };
 

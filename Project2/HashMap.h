@@ -29,6 +29,9 @@ public:
     T getValue(String key);
 
     int getSize();
+
+    T& operator [](String key);
+    
 };
 
 
@@ -108,6 +111,24 @@ inline T HashMap<T>::getValue(String key)
         current = current->next;
     }
     return T();
+}
+
+template<typename T>
+T& HashMap<T>::operator [](String key)
+{
+    try {
+        int index = hash(key) % table_size;
+        Node* current = table[index];
+        while (current != nullptr) {
+            if (current->key == key) {
+                return current->value;
+            }
+            current = current->next;
+        }
+	}
+	catch (const std::exception&) {
+		throw std::exception("Key not found!");
+	}
 }
 
 template<typename T>

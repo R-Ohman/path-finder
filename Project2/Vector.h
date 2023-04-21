@@ -7,11 +7,13 @@ class Vector {
 	T* data;
 	int size;
 	int allocated_size;
-	void init();
 	void reallocate(int new_size);
 public:
-	Vector();
+	Vector() = delete;
+	Vector(int size = VECTOR_START_SIZE);
+	Vector(const Vector<T>& other);
 	~Vector();
+	Vector<T>& operator=(const Vector<T>& other);
 	void push_back(T value);
 	T pop_back();
 	T& operator [] (int index);
@@ -21,25 +23,51 @@ public:
 
 
 template<typename T>
-Vector<T>::Vector()
+Vector<T>::Vector(int size) : allocated_size(size), size(0)
 {
-	init();
+	if (allocated_size) {
+		data = new T[allocated_size];
+	}
 }
 
 
 template<typename T>
 Vector<T>::~Vector()
 {
-	delete[] data;
+	if (allocated_size > 0) {
+		allocated_size = 0;
+		delete[] data;
+	}
 }
 
 
 template<typename T>
-void Vector<T>::init()
+Vector<T>::Vector(const Vector<T>& other) : size(other.size), allocated_size(other.allocated_size)
 {
-	size = 0;
-	allocated_size = VECTOR_START_SIZE;
-	data = new T[allocated_size];
+	if (allocated_size > 0) {
+		data = new T[allocated_size];
+		for (int i = 0; i < size; i++) {
+			data[i] = other.data[i];
+		}
+	}
+}
+
+
+template<typename T>
+Vector<T>& Vector<T>::operator=(const Vector<T>& other)
+{
+	if (this != &other) {
+		clear();
+		if (other.size > 0) {
+			data = new T[other.size];
+			allocated_size = other.size;
+			for (int i = 0; i < other.size; i++) {
+				data[i] = other.data[i];
+			}
+			size = other.size;
+		}
+	}
+	return *this;
 }
 
 
@@ -53,7 +81,9 @@ void Vector<T>::reallocate(int new_size)
 			new_data[i] = data[i];
 		}
 	}
-	delete[] data;
+	if (size > 0) {
+		delete[] data;
+	}
 	data = new_data;
 }
 
@@ -70,8 +100,11 @@ void Vector<T>::push_back(T value)
 template<typename T>
 T Vector<T>::pop_back()
 {
+	if (size < 1) {
+		throw "Vector is empty";
+	}
 	T last_value = data[--size];
-	if (4 * (size) <= allocated_size) {
+	if (size > VECTOR_START_SIZE && 4 * (size) <= allocated_size) {
 		reallocate(allocated_size / 2);
 	}
 	return last_value;
@@ -92,6 +125,9 @@ int Vector<T>::GetSize()
 template<typename T>
 void Vector<T>::clear()
 {
-	delete[] data;
-	init();
+	if (size > 0) {
+		delete[] data;
+	}
+	size = 0;
+	allocated_size = 0;
 }

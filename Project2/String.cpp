@@ -31,7 +31,10 @@ String::String(String&& other) noexcept {
 
 
 String::~String() {
-    delete[] str;
+    if (this->length != 0) {
+        length = 0;
+        delete[] str;
+    }
 }
 
 
