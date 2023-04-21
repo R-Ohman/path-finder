@@ -1,6 +1,14 @@
 #include <iostream>
 #include "Parameters.h"
 
+int stringToInt(const String& strNum) {
+	int num = 0;
+	for (int i = 0; i < strNum.GetLength(); i++) {
+		num = num * 10 + (strNum[i] - '0');
+	}
+	return num;
+}
+
 int main()
 {
 	int width, height;
@@ -19,7 +27,24 @@ int main()
 	}
 
 	CitiesGraph graph(map, height, width);
+
+	int countOfFlights;
+	std::cin >> countOfFlights;
+
+	char from[100], to[100];
+	int time;
+	for (int i = 0; i < countOfFlights; i++) {
+		std::cin >> from >> to >> time;
+		graph.addNeighbour(from, to, time);
+	}
+
+	int countOfCommands, typeOfSearch;
+	std::cin >> countOfCommands;
 	
+	for (int i = 0; i < countOfCommands; i++) {
+		std::cin >> from >> to >> typeOfSearch;
+	}
+
 	graph.printCities();
 	
 }

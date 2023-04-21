@@ -5,8 +5,8 @@ City::City()
 {
 }
 
-City::City(String name, int posX, int posY)
-	: name(name), distance(0), neighboursCount(0), posX(posX), posY(posY), visited(false), neighbours(VECTOR_START_SIZE)
+City::City(String name, int posX, int posY, int distance)
+	: name(name), distance(distance), neighboursCount(0), posX(posX), posY(posY), visited(false), neighbours(VECTOR_START_SIZE)
 {
 	if (this->getName() != "") {
 		//std::cout << this->getName() << " constructor (" << this << ")\n";

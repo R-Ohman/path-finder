@@ -12,7 +12,7 @@ private:
 
 public:
 	City();
-	City(String name, int posX, int posY);
+	City(String name, int posX, int posY, int distance = 0);
 	City(const City& other);
 	~City();
 
