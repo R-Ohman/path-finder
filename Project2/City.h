@@ -2,12 +2,11 @@
 
 #include "Parameters.h"
 
+
 class City
 {
 private:
 	String name;
-	int distance;
-	int neighboursCount;
 	int posX, posY;
 
 public:
@@ -21,18 +20,12 @@ public:
 	int getPosX();
 	int getPosY();
 	
-	void setName(String name);
+	void setName(const String& name);
 	String getName();
 	
-	void setDistance(int distance);
-	int getDistance();
-	void increaseNeighboursCount();
-
-	void setNeighboursCount(int neighboursCount);
-	int getNeighboursCount();
-	void addNeighbour(City neighbour);
+	//void addNeighbour(City neighbour);
 	
-	Vector<City> neighbours;
+	Vector<AnotherCity> neighbours;
 	bool visited;
 };
 

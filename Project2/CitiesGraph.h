@@ -14,9 +14,7 @@ private:
 	char** map;
 	bool** visited;
 	int height, width;
-	
-	Vector<String> citiesNames;
-	HashMap<City *> cities;
+
 	
 	void getCities();
 	void lookForNeighbours(const String& cityName);
@@ -24,6 +22,9 @@ private:
 	
 public:
 	CitiesGraph(char** map, int h, int w);
+	
+	Vector<String> citiesNames;
+	HashMap<City*> cities;
 	
 	void addNeighbour(const String& from, const String& to, int distance);
 	

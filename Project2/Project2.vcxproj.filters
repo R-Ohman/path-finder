@@ -47,5 +47,11 @@
     <ClInclude Include="City.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MinHeap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AnotherCity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

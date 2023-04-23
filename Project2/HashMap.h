@@ -31,7 +31,7 @@ public:
     int getSize();
 
     T& operator [](String key);
-    
+
 };
 
 
@@ -125,10 +125,10 @@ T& HashMap<T>::operator [](String key)
             }
             current = current->next;
         }
-	}
-	catch (const std::exception&) {
-		throw std::exception("Key not found!");
-	}
+    }
+    catch (const std::exception&) {
+        throw std::exception("Key not found!");
+    }
 }
 
 template<typename T>

@@ -1,6 +1,6 @@
 #pragma once
-
 #include "Parameters.h"
+
 
 template <typename T>
 class Vector {
@@ -19,6 +19,10 @@ public:
 	T& operator [] (int index);
 	int GetSize();
 	void clear();
+	bool isEmpty();
+
+	T& front();
+	T& back();
 };
 
 
@@ -130,4 +134,22 @@ void Vector<T>::clear()
 	}
 	size = 0;
 	allocated_size = 0;
+}
+
+template<typename T>
+inline bool Vector<T>::isEmpty()
+{
+	return size < 1;
+}
+
+template<typename T>
+inline T& Vector<T>::front()
+{
+	return data[0];
+}
+
+template<typename T>
+inline T& Vector<T>::back()
+{
+	return data[size - 1];
 }

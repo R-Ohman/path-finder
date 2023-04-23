@@ -23,19 +23,22 @@ CitiesGraph::CitiesGraph(char** map, int h, int w) : citiesNames(VECTOR_START_SI
 
 void CitiesGraph::addNeighbour(const String& from, const String& to, int distance)
 {
-	for (int i = 0; i < cities[from]->getNeighboursCount(); i++)
+	for (int i = 0; i < cities[from]->neighbours.GetSize(); i++)
 	{
-		if (cities[from]->neighbours[i].getName() == to)
+		if (cities[from]->neighbours[i].city->getName() == to)
 		{
-			if (cities[from]->neighbours[i].getDistance() > distance)
+			if (cities[from]->neighbours[i].distance > distance)
 			{
-				cities[from]->neighbours[i].setDistance(distance);
+				cities[from]->neighbours[i].distance = distance;
 			}
 			return;
 		}
 	}
-	cities[from]->increaseNeighboursCount();
-	cities[from]->neighbours.push_back(City(to, -1, -1, distance));
+	
+	City* newCity = new City(to, -1, -1, distance);
+	AnotherCity newNeighbour(distance, newCity);
+	cities[from]->neighbours.push_back(newNeighbour);
+
 }
 
 
@@ -56,16 +59,16 @@ void CitiesGraph::getCities()
 							continue;
 						}
 						// One of the letters is found
-						if (map[i + k][j + m] >= 'A' && map[i + k][j + m] <= 'Z') {
+						if (map[i + k][j + m] != '.' && map[i + k][j + m] != '#' && map[i + k][j + m] != '*') {
 							int tmpX1 = j + m, tmpX2 = j + m + 1;
 							// read the name to the left border
-							while (tmpX1 >= 0 && map[i + k][tmpX1] >= 'A' && map[i + k][tmpX1] <= 'Z') {
+							while (tmpX1 >= 0 && map[i + k][tmpX1] != '.' && map[i + k][tmpX1] != '#' && map[i + k][tmpX1] != '*') {
 
 								cityName.PushFront(map[i + k][tmpX1]);
 								tmpX1--;
 							}
 							// read the name to the right border
-							while (tmpX2 < width && map[i + k][tmpX2] >= 'A' && map[i + k][tmpX2] <= 'Z') {
+							while (tmpX2 < width && map[i + k][tmpX2] != '.' && map[i + k][tmpX2] != '#' && map[i + k][tmpX2] != '*') {
 								cityName += map[i + k][tmpX2];
 								tmpX2++;
 							}
@@ -110,12 +113,11 @@ void CitiesGraph::lookForNeighbours(const String& cityName)
 						) {
 
 						// Check if the neighbour is already in the list and it has less distance
-						for (int k = 0; k < cities[cityName]->getNeighboursCount(); k++) {
-
-							if (cities[cityName]->neighbours[k].getName() == citiesNames[j])
+						for (int k = 0; k < cities[cityName]->neighbours.GetSize(); k++) {
+							if (cities[cityName]->neighbours[k].city->getName() == citiesNames[j])
 							{
-								if (cities[cityName]->neighbours[k].getDistance() > current.distance) {
-									cities[cityName]->neighbours[k].setDistance(current.distance);
+								if (cities[cityName]->neighbours[k].distance > current.distance) {
+									cities[cityName]->neighbours[k].distance = current.distance;
 								}
 								//std::cout << "FLAG | " << cities[cityName]->getName() << " | " << cities[citiesNames[j]]->getName() << " [" << current.distance << "] " << cities[cityName]->neighbours[k].getName() << "[" << cities[cityName]->neighbours[k].getDistance() << "]" << "\n";
 								endOfSearch = true;
@@ -125,13 +127,9 @@ void CitiesGraph::lookForNeighbours(const String& cityName)
 						if (endOfSearch) {
 							break;
 						}
-						// Add count of neighbours
-						cities[cityName]->increaseNeighboursCount();
 						// Add new neighbour
-						cities[cityName]->neighbours.push_back(*cities[citiesNames[j]]);
-						// Add distance to added neighbour
-
-						cities[cityName]->neighbours[cities[cityName]->neighbours.GetSize() - 1].setDistance(current.distance);
+						AnotherCity newNeighbour(current.distance, cities[citiesNames[j]]);
+						cities[cityName]->neighbours.push_back(newNeighbour);
 						endOfSearch = true;
 						break;
 					}
@@ -175,10 +173,12 @@ void CitiesGraph::printCities()
 {
 	for (int i = 0; i < citiesNames.GetSize(); i++) {
 		std::cout << "City: " << cities[citiesNames[i]]->getName() << "(" << cities[citiesNames[i]]->getPosX() << ", " << cities[citiesNames[i]]->getPosY() << ")" << "\n\t";
-		std::cout << "Neighbours:\n\t\t";
-		for (int j = 0; j < cities[citiesNames[i]]->getNeighboursCount(); j++) {
-			std::cout << cities[citiesNames[i]]->neighbours[j].getName() << "(" << cities[citiesNames[i]]->neighbours[j].getDistance() << ")\n";
-			if (j < cities[citiesNames[i]]->getNeighboursCount() - 1) {
+		for (int j = 0; j < cities[citiesNames[i]]->neighbours.GetSize(); j++) {
+			if (j == 0) {
+				std::cout << "Neighbours:\n\t\t";
+			}
+			std::cout << cities[citiesNames[i]]->neighbours[j].city->getName() << "(" << cities[citiesNames[i]]->neighbours[j].distance << ")\n";
+			if (j < cities[citiesNames[i]]->neighbours.GetSize() - 1) {
 				std::cout << "\t\t";
 			}
 		}
