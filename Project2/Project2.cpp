@@ -1,8 +1,9 @@
 #include <iostream>
 #include "Parameters.h"
-
+int AnotherCity::idCounter = 0;
 
 void dijkstra (CitiesGraph& graph, const String& startCity, const String& endCity, int typeOfSearch) {
+	
 	HashMap<AnotherCity* > graphCities;
 
 	for (int i = 0; i < graph.citiesNames.GetSize(); i++) {
@@ -15,6 +16,7 @@ void dijkstra (CitiesGraph& graph, const String& startCity, const String& endCit
 	}
 	MinHeap queue;
 	queue.insert(graphCities[startCity]);
+	HashMap<bool> addedToQueue;
 	
 	while (!queue.empty()) {
 		AnotherCity* current = queue.extractMin();
@@ -27,6 +29,10 @@ void dijkstra (CitiesGraph& graph, const String& startCity, const String& endCit
 			if (graphCities[current->city->neighbours[i].city->getName()]->distance > current->distance + current->city->neighbours[i].distance
 				) {
 				graphCities[current->city->neighbours[i].city->getName()]->distance = current->distance + current->city->neighbours[i].distance;
+				/*if (addedToQueue.containsKey(current->city->neighbours[i].city->getName())) {
+					addedToQueue.putValue(current->city->neighbours[i].city->getName(), true);
+					queue.insert(graphCities[current->city->neighbours[i].city->getName()]);
+				}*/
 				queue.insert(graphCities[current->city->neighbours[i].city->getName()]);
 				graphCities[current->city->neighbours[i].city->getName()]->prev_city = current;
 			}

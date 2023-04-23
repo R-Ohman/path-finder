@@ -1,5 +1,8 @@
 #include "CitiesGraph.h"
 
+
+
+
 CitiesGraph::CitiesGraph(char** map, int h, int w) : citiesNames(VECTOR_START_SIZE), height(h), width(w), map(map)
 {
 	visited = new bool* [height];
@@ -35,10 +38,8 @@ void CitiesGraph::addNeighbour(const String& from, const String& to, int distanc
 		}
 	}
 	
-	City* newCity = new City(to, -1, -1, distance);
-	AnotherCity newNeighbour(distance, newCity);
+	AnotherCity newNeighbour(distance, cities[to]);
 	cities[from]->neighbours.push_back(newNeighbour);
-
 }
 
 
@@ -72,7 +73,7 @@ void CitiesGraph::getCities()
 								cityName += map[i + k][tmpX2];
 								tmpX2++;
 							}
-
+							// WARN i -> j, j -> i
 							cities.putValue(cityName, new City(cityName, j, i));
 							
 							citiesNames.push_back(cityName);
@@ -88,24 +89,23 @@ void CitiesGraph::getCities()
 void CitiesGraph::lookForNeighbours(const String& cityName)
 {
 	
-	Vector<spot> queue(VECTOR_START_SIZE);
+	PrioritySpot queue;
 
 	int startCityPosX = cities[cityName]->getPosX();
 	int startCityPosY = cities[cityName]->getPosY();
 
-	queue.push_back(spot(startCityPosX, startCityPosY));
+	queue.insert(spot(startCityPosX, startCityPosY));
 
-	while (queue.GetSize()) {
+	while (!queue.empty()) {
 		bool endOfSearch = false;
-		spot current = queue.pop_back();
+		spot current = queue.extractMin();
 
 		if (visited[current.y][current.x]) {
 			continue;
 		}
 
-		if (map[current.y][current.x] == '*') {
+		if (map[current.y][current.x] == '*' && !(current.x == startCityPosX && current.y == startCityPosY)) {
 
-			if (current.x != startCityPosX || current.y != startCityPosY) {
 				// found neighbour
 				for (int j = 0; j < citiesNames.GetSize(); j++) {
 					if (cities[citiesNames[j]]->getPosX() == current.x
@@ -114,12 +114,13 @@ void CitiesGraph::lookForNeighbours(const String& cityName)
 
 						// Check if the neighbour is already in the list and it has less distance
 						for (int k = 0; k < cities[cityName]->neighbours.GetSize(); k++) {
+							
 							if (cities[cityName]->neighbours[k].city->getName() == citiesNames[j])
 							{
+								
 								if (cities[cityName]->neighbours[k].distance > current.distance) {
 									cities[cityName]->neighbours[k].distance = current.distance;
 								}
-								//std::cout << "FLAG | " << cities[cityName]->getName() << " | " << cities[citiesNames[j]]->getName() << " [" << current.distance << "] " << cities[cityName]->neighbours[k].getName() << "[" << cities[cityName]->neighbours[k].getDistance() << "]" << "\n";
 								endOfSearch = true;
 								break;
 							}
@@ -130,40 +131,39 @@ void CitiesGraph::lookForNeighbours(const String& cityName)
 						// Add new neighbour
 						AnotherCity newNeighbour(current.distance, cities[citiesNames[j]]);
 						cities[cityName]->neighbours.push_back(newNeighbour);
-						endOfSearch = true;
+						//endOfSearch = true; | WARN
 						break;
 					}
 
 				}
-			}
 		}
-		if (endOfSearch) {
-			continue;
+		else if (map[current.y][current.x] == '#' || current.x == startCityPosX && current.y == startCityPosY) {
+
+			visited[current.y][current.x] = true;
+
+			continueLookinfForNeighbour(queue, current);
 		}
-
-		visited[current.y][current.x] = true;
-
-		continueLookinfForNeighbour(queue, current);
-
 	}
 }
 
 
-void CitiesGraph::continueLookinfForNeighbour(Vector<spot>& queue, spot current)
+void CitiesGraph::continueLookinfForNeighbour(PrioritySpot& queue, spot& current)
 {
 	for (int n = -1; n < 2; n += 2) {
 		if (current.x + n >= 0 && current.x + n < width
 			&& (map[current.y][current.x + n] == '#' || map[current.y][current.x + n] == '*')
 			&& !visited[current.y][current.x + n]
 			) {
-			queue.push_back(spot(current.x + n, current.y, current.distance + 1));
+
+			queue.insert(spot(current.x + n, current.y, current.distance + 1));
 		}
 
 		if (current.y + n >= 0 && current.y + n < height
 			&& (map[current.y + n][current.x] == '#' || map[current.y + n][current.x] == '*')
 			&& !visited[current.y + n][current.x]
 			) {
-			queue.push_back(spot(current.x, current.y + n, current.distance + 1));
+
+			queue.insert(spot(current.x, current.y + n, current.distance + 1));
 		}
 	}
 }
