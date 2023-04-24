@@ -10,6 +10,7 @@ CitiesGraph::CitiesGraph(char** map, int h, int w) : citiesNames(VECTOR_START_SI
 	}
 	
 	getCities();
+	//if (width == 2048) std::cout << "Cities count: " << citiesNames.GetSize() << "\n\n";
 
 	for (int i = 0; i < citiesNames.GetSize(); i++)
 	{
@@ -89,12 +90,11 @@ void CitiesGraph::lookForNeighbours(const String& cityName)
 {
 	
 	PrioritySpot queue;
-
 	int startCityPosX = cities[cityName]->getPosX();
 	int startCityPosY = cities[cityName]->getPosY();
 
 	queue.insert(spot(startCityPosX, startCityPosY));
-
+	//if (width == 2048) 	std::cout << cityName << std::endl;
 	while (!queue.empty()) {
 		bool endOfSearch = false;
 		spot current = queue.extractMin();
@@ -130,6 +130,7 @@ void CitiesGraph::lookForNeighbours(const String& cityName)
 						// Add new neighbour
 						AnotherCity newNeighbour(current.distance, cities[citiesNames[j]]);
 						cities[cityName]->neighbours.push_back(newNeighbour);
+						//if (width == 2048) 	std::cout << "New neighbour: " << citiesNames[j] << " " << current.distance << " | " << cities[cityName]->neighbours.GetSize() << std::endl;
 						//endOfSearch = true; | WARN
 						break;
 					}

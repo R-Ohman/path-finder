@@ -33,6 +33,7 @@ private:
                 minIndex = right;
             }
 
+
             if (minIndex != i) {
                 std::swap(heap[i], heap[minIndex]);
                 i = minIndex;

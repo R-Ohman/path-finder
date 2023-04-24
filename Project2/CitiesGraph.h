@@ -25,19 +25,33 @@ private:
 				i = getParent(i);
 			}
 		}
-		void siftDown(int i) {
-			int minIndex = i;
-			int left = getLeftChild(i);
-			if (left < heap.GetSize() && heap[left].distance < heap[minIndex].distance) {
-				minIndex = left;
-			}
-			int right = getRightChild(i);
-			if (right < heap.GetSize() && heap[right].distance < heap[minIndex].distance) {
-				minIndex = right;
-			}
-			if (i != minIndex) {
-				std::swap(heap[i], heap[minIndex]);
-				siftDown(minIndex);
+		
+		void siftDown() {
+			int i = 0;
+			while (i < heap.GetSize()) {
+				int left = getLeftChild(i);
+				int right = getRightChild(i);
+				int minIndex = i;
+
+				if (left < heap.GetSize() && (heap[left].distance < heap[minIndex].distance ||
+					(heap[left].distance == heap[minIndex].distance && heap[left].x < heap[minIndex].x) ||
+					(heap[left].distance == heap[minIndex].distance && heap[left].y < heap[minIndex].y))) {
+					minIndex = left;
+				}
+
+				if (right < heap.GetSize() && (heap[right].distance < heap[minIndex].distance ||
+					(heap[right].distance == heap[minIndex].distance && heap[right].x < heap[minIndex].x) ||
+					(heap[right].distance == heap[minIndex].distance && heap[right].y < heap[minIndex].y))) {
+					minIndex = right;
+				}
+
+				if (minIndex != i) {
+					std::swap(heap[i], heap[minIndex]);
+					i = minIndex;
+				}
+				else {
+					break;
+				}
 			}
 		}
 
@@ -52,7 +66,7 @@ private:
 			spot root = heap.front();
 			std::swap(heap.front(), heap.back());
 			heap.pop_back();
-			siftDown(0);
+			siftDown();
 			return root;
 		}
 		bool empty() {

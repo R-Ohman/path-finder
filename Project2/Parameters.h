@@ -2,7 +2,7 @@
 #ifndef _PARAMETERS_H_
 #define _PARAMETERS_H_
 
-#define HASHMAP_SIZE		1000
+#define HASHMAP_SIZE		5000
 #define VECTOR_START_SIZE	512
 
 static int constructorCounter = 0;
