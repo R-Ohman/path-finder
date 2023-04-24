@@ -50,6 +50,7 @@ public:
         heap.push_back(value);
         siftUp(heap.GetSize() - 1);
     }
+
     AnotherCity* extractMin() {
 
         /*std::cout << "Heap: " << std::endl;
@@ -66,6 +67,7 @@ public:
 
         return root;
     }
+    
     bool empty() {
         return heap.isEmpty();
     }

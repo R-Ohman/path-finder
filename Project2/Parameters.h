@@ -3,7 +3,7 @@
 #define _PARAMETERS_H_
 
 #define HASHMAP_SIZE		1000
-#define VECTOR_START_SIZE	20
+#define VECTOR_START_SIZE	512
 
 static int constructorCounter = 0;
 static int destructorCounter = 0;
@@ -16,5 +16,6 @@ static int destructorCounter = 0;
 #include "City.h"
 #include "CitiesGraph.h"
 #include "MinHeap.h"
+
 
 #endif

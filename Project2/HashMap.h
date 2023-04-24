@@ -125,6 +125,10 @@ T& HashMap<T>::operator [](String key)
             }
             current = current->next;
         }
+        Node* new_node = new Node(key, T());
+        new_node->next = table[index];
+        table[index] = new_node;
+        return new_node->value;
     }
     catch (const std::exception&) {
         throw std::exception("Key not found!");

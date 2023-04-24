@@ -79,6 +79,8 @@ public:
 	
 	void printCities();
 	
+	CitiesGraph(const CitiesGraph& other);
+	CitiesGraph& operator=(const CitiesGraph& other);
 	~CitiesGraph();
 };
 

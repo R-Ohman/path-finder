@@ -2,7 +2,6 @@
 
 
 
-
 CitiesGraph::CitiesGraph(char** map, int h, int w) : citiesNames(VECTOR_START_SIZE), height(h), width(w), map(map)
 {
 	visited = new bool* [height];
@@ -196,4 +195,55 @@ CitiesGraph::~CitiesGraph()
 	}
 	delete[] map;
 	delete[] visited;
+}
+
+
+CitiesGraph::CitiesGraph(const CitiesGraph& other) : height(other.height), width(other.width), citiesNames(other.citiesNames)
+{
+	// Copy the map
+	map = new char* [height];
+	for (int i = 0; i < height; i++) {
+		map[i] = new char[width];
+		memcpy(map[i], other.map[i], width);
+	}
+
+	// Copy the visited array
+	visited = new bool* [height];
+	for (int i = 0; i < height; i++) {
+		visited[i] = new bool[width];
+		memcpy(visited[i], other.visited[i], width);
+	}
+}
+
+CitiesGraph& CitiesGraph::operator=(const CitiesGraph& other)
+{
+	if (this != &other) // avoid self-assignment
+	{
+		// delete existing data
+		for (int i = 0; i < height; i++) {
+			delete[] map[i];
+			delete[] visited[i];
+		}
+		delete[] map;
+		delete[] visited;
+
+		// copy data from other object
+		height = other.height;
+		width = other.width;
+		citiesNames = other.citiesNames;
+		cities = other.cities;
+
+		// allocate new memory for map and visited arrays
+		map = new char* [height];
+		visited = new bool* [height];
+		for (int i = 0; i < height; i++) {
+			map[i] = new char[width];
+			visited[i] = new bool[width];
+			for (int j = 0; j < width; j++) {
+				map[i][j] = other.map[i][j];
+				visited[i][j] = other.visited[i][j];
+			}
+		}
+	}
+	return *this;
 }

@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Parameters.h"
+
 int AnotherCity::idCounter = 0;
 
 void dijkstra (CitiesGraph& graph, const String& startCity, const String& endCity, int typeOfSearch) {
