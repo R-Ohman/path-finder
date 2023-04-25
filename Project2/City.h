@@ -6,12 +6,12 @@
 class City
 {
 private:
-	String name;
+	char name[CITY_NAME_BUFFER];
 	int posX, posY;
 
 public:
 	City();
-	City(String name, int posX, int posY, int distance = 0);
+	City(char* name, int posX, int posY, int distance = 0);
 	City(const City& other);
 	~City();
 
@@ -20,8 +20,8 @@ public:
 	int getPosX();
 	int getPosY();
 	
-	void setName(const String& name);
-	String getName();
+	void setName(char* name);
+	char* getName();
 	
 	//void addNeighbour(City neighbour);
 	

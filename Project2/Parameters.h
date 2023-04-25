@@ -3,14 +3,16 @@
 #define _PARAMETERS_H_
 
 #define HASHMAP_SIZE		5000
+#define VECTOR_BLOCK_SIZE	163840
 #define VECTOR_START_SIZE	512
+#define CITY_NAME_BUFFER	64
 
 static int constructorCounter = 0;
 static int destructorCounter = 0;
 
 #include <iostream>
 #include "Vector.h"
-#include "String.h"
+//#include "String.h"
 #include "HashMap.h"
 #include "AnotherCity.h"
 #include "City.h"

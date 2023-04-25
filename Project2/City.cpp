@@ -1,32 +1,45 @@
 #include "City.h"
 
 City::City()
-	: name(""), posX(0), posY(0), visited(false), neighbours(0)
+	: posX(0), posY(0), visited(false), neighbours(0)
 {
+	name[0] = '\0';
 	//std::cout << "City default constructor [" << ++constructorCounter << "]\n";
 }
 
-City::City(String name, int posX, int posY, int distance)
-	: name(name), posX(posX), posY(posY), visited(false), neighbours(VECTOR_START_SIZE)
+City::City(char* name, int posX, int posY, int distance)
+	: posX(posX), posY(posY), visited(false), neighbours(VECTOR_START_SIZE)
 {
-	//std::cout << "City constructor [" << ++constructorCounter << "]\n";
-	if (this->getName() != "") {
-		//std::cout << this->getName() << " constructor (" << this << ")\n";
+	for (int i = 0; i < CITY_NAME_BUFFER; i++) {
+		this->name[i] = name[i];
+		if (name[i] == '\0') {
+			break;
+		}
 	}
+	/*std::cout << "City constructor [" << ++constructorCounter << "]\n";
+	if (this->getName() != "") {
+		std::cout << this->getName() << " constructor (" << this << ")\n";
+	}*/
 }
 
 City::City(const City& other)
-	: name(other.name), posX(other.posX), posY(other.posY), neighbours(other.neighbours), visited(other.visited)
+	: posX(other.posX), posY(other.posY), neighbours(other.neighbours), visited(other.visited)
 {
+	for (int i = 0; i < CITY_NAME_BUFFER; i++) {
+		this->name[i] = other.name[i];
+		if (other.name[i] == '\0') {
+			break;
+		}
+	}
 	//std::cout << "City copy constructor [" << ++constructorCounter << "]\n";
 }
 
 City::~City()
 {
-	//std::cout << "City destructor [" << ++destructorCounter << "]\n";
+	/*std::cout << "City destructor [" << ++destructorCounter << "]\n";
 	if (this->getName() != "") {
-		//std::cout << this->getName() << " destructor (" << this << ")\n";
-	}
+		std::cout << this->getName() << " destructor (" << this << ")\n";
+	}*/
 }
 
 City& City::operator=(const City& other)
@@ -34,7 +47,12 @@ City& City::operator=(const City& other)
 	if (this == &other) {
 		return *this;
 	}
-	name = other.name;
+	for (int i = 0; i < CITY_NAME_BUFFER; i++) {
+		this->name[i] = other.name[i];
+		if (other.name[i] == '\0') {
+			break;
+		}
+	}
 	posX = other.posX;
 	posY = other.posY;
 	neighbours = other.neighbours;
@@ -52,12 +70,17 @@ int City::getPosY()
 	return this->posY;
 }
 
-void City::setName(const String& name)
+void City::setName(char* name)
 {
-	this->name = name;
+	for (int i = 0; i < CITY_NAME_BUFFER; i++) {
+		this->name[i] = name[i];
+		if (name[i] == '\0') {
+			break;
+		}
+	}
 }
 
-String City::getName()
+char* City::getName()
 {
 	return this->name;
 }

@@ -78,18 +78,18 @@ private:
 	bool** visited;
 	int height, width;
 
+	char* getCityName(int x, int y);
 	
 	void getCities();
-	void lookForNeighbours(const String& cityName);
+	void lookForNeighbours(char* cityName);
 	void continueLookinfForNeighbour(PrioritySpot& queue, spot& current);
 	
 public:
 	CitiesGraph(char** map, int h, int w);
 	
-	Vector<String> citiesNames;
 	HashMap<City*> cities;
 	
-	void addNeighbour(const String& from, const String& to, int distance);
+	void addNeighbour(char* from, char* to, int distance);
 	
 	void printCities();
 	

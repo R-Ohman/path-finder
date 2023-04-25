@@ -5,41 +5,51 @@ template <typename T>
 class HashMap {
 private:
     struct Node {
-        String key;
+        char key[CITY_NAME_BUFFER];
         T value;
         Node* next;
-        Node(String k, T v) : key(k), value(v), next(nullptr) {}
+        Node(char* k, T v) : value(v), next(nullptr) {
+            for (int i = 0; i < CITY_NAME_BUFFER; i++) {
+				key[i] = k[i];
+                if (k[i] == '\0') {
+                    break;
+                }
+            }
+        }
     };
 
     Node** table;
     int table_size;
     int count;
 
-    unsigned hash(String key);
+    unsigned hash(char* key);
 
 public:
     HashMap();
 
     ~HashMap();
 
-    void putValue(String key, T value);
+    void putValue(char* key, T value);
 
-    bool containsKey(String key);
+    bool containsKey(char* key);
 
-    T getValue(String key);
+    T getValue(char* key);
 
     int getSize();
 
-    T& operator [](String key);
+    T& operator [](char* key);
 
 };
 
 
 template<typename T>
-inline unsigned HashMap<T>::hash(String key)
+inline unsigned HashMap<T>::hash(char* key)
 {
     unsigned int hash = 0;
-    for (size_t i = 0; i < key.GetLength(); i++) {
+    for (size_t i = 0;; i++) {
+		if (key[i] == '\0') {
+			break;
+		}
         hash = hash * 31 + key[i];
     }
     return hash;
@@ -68,12 +78,13 @@ inline HashMap<T>::~HashMap()
 }
 
 template<typename T>
-inline void HashMap<T>::putValue(String key, T value)
+inline void HashMap<T>::putValue(char* key, T value)
 {
+//	std::cout << "putValue (" << key << ")\n";
     int index = hash(key) % table_size;
     Node* current = table[index];
     while (current != nullptr) {
-        if (current->key == key) {
+        if (strcmp(current->key, key) == 0) {
             current->value = value;
             return;
         }
@@ -86,12 +97,12 @@ inline void HashMap<T>::putValue(String key, T value)
 }
 
 template<typename T>
-inline bool HashMap<T>::containsKey(String key)
+inline bool HashMap<T>::containsKey(char* key)
 {
     int index = hash(key) % table_size;
     Node* current = table[index];
     while (current != nullptr) {
-        if (current->key == key) {
+        if (strcmp(current->key, key) == 0) {
             return true;
         }
         current = current->next;
@@ -100,12 +111,12 @@ inline bool HashMap<T>::containsKey(String key)
 }
 
 template<typename T>
-inline T HashMap<T>::getValue(String key)
+inline T HashMap<T>::getValue(char* key)
 {
     int index = hash(key) % table_size;
     Node* current = table[index];
     while (current != nullptr) {
-        if (current->key == key) {
+        if (strcmpt(current->key, key) == 0) {
             return current->value;
         }
         current = current->next;
@@ -114,13 +125,13 @@ inline T HashMap<T>::getValue(String key)
 }
 
 template<typename T>
-T& HashMap<T>::operator [](String key)
+T& HashMap<T>::operator [](char* key)
 {
     try {
         int index = hash(key) % table_size;
         Node* current = table[index];
         while (current != nullptr) {
-            if (current->key == key) {
+            if (strcmp(current->key, key) == 0) {
                 return current->value;
             }
             current = current->next;
