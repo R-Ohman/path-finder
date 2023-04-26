@@ -4,36 +4,45 @@
 class MinHeap {
 private:
     Vector<AnotherCity*> heap;
+    
     int getParent(int i) { return (i - 1) / 2; }
     int getLeftChild(int i) { return 2 * i + 1; }
     int getRightChild(int i) { return 2 * i + 2; }
 
-    void siftUp(int i) {
+    void siftUp(int i)
+    {
+		// While we haven't reached the root and there is a smaller element than the current one -> swap 
         while (i > 0 && (heap[i]->distance < heap[getParent(i)]->distance ||
-            (heap[i]->distance == heap[getParent(i)]->distance && heap[i]->id < heap[getParent(i)]->id))) {
+            (heap[i]->distance == heap[getParent(i)]->distance && heap[i]->id < heap[getParent(i)]->id))
+            ) {
             std::swap(heap[i], heap[getParent(i)]);
             i = getParent(i);
         }
     }
 
-    void siftDown() {
+    void siftDown()
+    {
         int i = 0;
+
+		// While the current element has at least one child -> swap with the smallest child
         while (i < heap.GetSize()) {
+            
             int left = getLeftChild(i);
             int right = getRightChild(i);
             int minIndex = i;
 
             if (left < heap.GetSize() && (heap[left]->distance < heap[minIndex]->distance ||
-                (heap[left]->distance == heap[minIndex]->distance && heap[left]->id < heap[minIndex]->id))) {
+                (heap[left]->distance == heap[minIndex]->distance && heap[left]->id < heap[minIndex]->id))
+                ) {
                 minIndex = left;
             }
 
             if (right < heap.GetSize() && (heap[right]->distance < heap[minIndex]->distance ||
-                (heap[right]->distance == heap[minIndex]->distance && heap[right]->id < heap[minIndex]->id))) {
+                (heap[right]->distance == heap[minIndex]->distance && heap[right]->id < heap[minIndex]->id))
+                ) {
                 minIndex = right;
             }
-
-
+			// If the current element is not the smallest -> swap with the smallest
             if (minIndex != i) {
                 std::swap(heap[i], heap[minIndex]);
                 i = minIndex;
@@ -47,13 +56,15 @@ private:
 public:
     MinHeap() : heap(VECTOR_START_SIZE) {}
 
-    void insert(AnotherCity* value) {
+    void insert(AnotherCity* value)
+    {
         heap.push_back(value);
         siftUp(heap.GetSize() - 1);
     }
 
-    AnotherCity* extractMin() {
-
+	// Returns the root of the heap, removes it and restores the heap
+    AnotherCity* extractMin()
+    {
         AnotherCity* root = heap.front();
         std::swap(heap.front(), heap.back());
         heap.pop_back();

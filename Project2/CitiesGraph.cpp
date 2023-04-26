@@ -1,4 +1,80 @@
-﻿﻿#include "CitiesGraph.h"
+﻿#include "CitiesGraph.h"
+
+
+// Min heap for spots
+class CitiesGraph::PrioritySpot {
+private:
+    Vector<spot> heap;
+
+    int getParent(int i) { return (i - 1) / 2; }
+    int getLeftChild(int i) { return 2 * i + 1; }
+    int getRightChild(int i) { return 2 * i + 2; }
+    
+    void siftUp(int i)
+    {
+        // While we haven't reached the root and there is a smaller element than the current one -> swap 
+        while (i > 0 && heap[i].distance < heap[getParent(i)].distance) {
+            std::swap(heap[i], heap[getParent(i)]);
+            i = getParent(i);
+        }
+    }
+
+    void siftDown()
+    {
+        int i = 0;
+        // While the current element has at least one child -> swap with the smallest child
+        while (i < heap.GetSize()) {
+           
+            int left = getLeftChild(i);
+            int right = getRightChild(i);
+            int minIndex = i;
+
+            if (left < heap.GetSize() && (heap[left].distance < heap[minIndex].distance ||
+                (heap[left].distance == heap[minIndex].distance && heap[left].x < heap[minIndex].x) ||
+                (heap[left].distance == heap[minIndex].distance && heap[left].y < heap[minIndex].y))) {
+                minIndex = left;
+            }
+
+            if (right < heap.GetSize() && (heap[right].distance < heap[minIndex].distance ||
+                (heap[right].distance == heap[minIndex].distance && heap[right].x < heap[minIndex].x) ||
+                (heap[right].distance == heap[minIndex].distance && heap[right].y < heap[minIndex].y))) {
+                minIndex = right;
+            }
+
+            // If the current element is not the smallest -> swap with the smallest
+            if (minIndex != i) {
+                std::swap(heap[i], heap[minIndex]);
+                i = minIndex;
+            }
+            else {
+                break;
+            }
+        }
+    }
+
+public:
+    PrioritySpot() : heap(VECTOR_START_SIZE) {}
+
+    void insert(spot value)
+    {
+        heap.push_back(value);
+        siftUp(heap.GetSize() - 1);
+    }
+    
+    // Returns the root of the heap, removes it and restores the heap
+    spot extractMin()
+    {
+        spot root = heap.front();
+        std::swap(heap.front(), heap.back());
+        heap.pop_back();
+        siftDown();
+        return root;
+    }
+    
+    bool empty() {
+        return heap.isEmpty();
+    }
+};
 
 
 CitiesGraph::CitiesGraph(char** map, int h, int w) : height(h), width(w), map(map)
@@ -10,35 +86,35 @@ CitiesGraph::CitiesGraph(char** map, int h, int w) : height(h), width(w), map(ma
             visited[k][m] = false;
         }
     }
-
+    // Create the graph
     getCities();
-    //if (width == 2048) std::cout << "Cities count: " << citiesNames.GetSize() << "\n\n";
 
 }
 
 
 char* CitiesGraph::getCityName(int x, int y)
 {
+	// Check 4 neighbours
     for (int k = -1; k < 2; k++) {
         for (int m = -1; m < 2; m++) {
             if (x + m < 0 || x + m >= width || y + k < 0 || y + k >= height) {
                 continue;
             }
+            
             // One of the letters is found
             if (map[y + k][x + m] != '.' && map[y + k][x + m] != '#' && map[y + k][x + m] != '*') {
                 int tmpX = x + m, i = 0;
-                // read the name to the left border
+                
+                // Read the name to the left border
                 while (tmpX >= 0 && map[y + k][tmpX] != '.' && map[y + k][tmpX] != '#' && map[y + k][tmpX] != '*') {
                     tmpX--;
                 }
                 static char buffer[CITY_NAME_BUFFER];
-                //std::cout << "Before: " << buffer << " | After: " << '\n';
-                // read the name to the right border
+                // Read the name to the right border
                 while (++tmpX < width && map[y + k][tmpX] != '.' && map[y + k][tmpX] != '#' && map[y + k][tmpX] != '*') {
                     buffer[i++] = map[y + k][tmpX];
                 }
                 buffer[i] = '\0';
-                //std::cout << buffer << '\n';
                 return buffer;
             }
         }
@@ -51,6 +127,7 @@ void CitiesGraph::addNeighbour(char* from, char* to, int distance)
 {
     for (int i = 0; i < cities[from]->neighbours.GetSize(); i++)
     {
+		// If the city is already a neighbour -> update the distance
         if (strcmp(cities[from]->neighbours[i].city->getName(), to) == 0)
         {
             if (cities[from]->neighbours[i].distance > distance)
@@ -60,7 +137,7 @@ void CitiesGraph::addNeighbour(char* from, char* to, int distance)
             return;
         }
     }
-
+	// Add the new neighbour
     AnotherCity newNeighbour(distance, cities[to]);
     cities[from]->neighbours.push_back(newNeighbour);
 }
@@ -75,28 +152,24 @@ void CitiesGraph::getCities()
                 static char cityName[CITY_NAME_BUFFER];
                 strcpy_s(cityName, getCityName(j, i));
 
-                if (!cities.containsKey(cityName)) {
-                    //std::cout << "74 | " << cityName << std::endl;
+				// If it is the first time the city is found -> add it to the hashmap
+                if (!cities.containsKey(cityName))
+                {
                     cities.putValue(cityName, new City(cityName, j, i));
-                    //std::cout << "77 | Put " << cityName << " to cities\n";
                 }
                 else if (visited[i][j]) {
-
+					// If this city has already been visited -> reset the visited array
                     for (int k = 0; k < height; k++) {
                         for (int m = 0; m < width; m++) {
-
-
                             visited[k][m] = false;
                         }
-
                     }
                 }
-                //std::fill(&visited[0][0], &visited[0][0] + height * width, false);
-
-
-                if (cities.containsKey(cityName)) {
-                    lookForNeighbours(cityName);
-                }
+               
+				// Look for neighbours of the current city
+                //if (cities.containsKey(cityName)) {
+                lookForNeighbours(cityName);
+                //}
             }
         }
     }
@@ -104,15 +177,13 @@ void CitiesGraph::getCities()
 
 void CitiesGraph::lookForNeighbours(char* cityName)
 {
-    //static char cityName[CITY_NAME_BUFFER];
-    //strcpy_s(cityName2, cityName);
     static PrioritySpot queue;
-    //std::cout << "97 | " << cityName << std::endl;
+ 
     int startCityPosX = cities[cityName]->getPosX();
     int startCityPosY = cities[cityName]->getPosY();
 
     queue.insert(spot(startCityPosX, startCityPosY));
-    //if (width == 2048)    std::cout << cityName << std::endl;
+    
     while (!queue.empty()) {
         bool endOfSearch = false;
         spot current = queue.extractMin();
@@ -121,20 +192,19 @@ void CitiesGraph::lookForNeighbours(char* cityName)
             continue;
         }
 
-        if (map[current.y][current.x] == '*' && !(current.x == startCityPosX && current.y == startCityPosY)) {
-            //static char neighbourCityName[CITY_NAME_BUFFER];
-            // WARN | cityName � neighbourCityName - ���� ���������
+		// If neighbour is found
+        if (map[current.y][current.x] == '*' && !(current.x == startCityPosX && current.y == startCityPosY))
+        {
             char* neighbourCityName = getCityName(current.x, current.y);
-            //strcpy_s(neighbourCityName, getCityName(current.x, current.y));
 
+			// If the city is not in the hashmap -> add it
             if (!cities.containsKey(neighbourCityName)) {
                 cities.putValue(neighbourCityName, new City(neighbourCityName, current.x, current.y));
-                //std::cout << "116 | Put " << neighbourCityName << " to cities\n";
             }
-
 
             for (int k = 0; k < cities[cityName]->neighbours.GetSize(); k++) {
 
+				// If the city is already a neighbour -> update the distance
                 if (strcmp(cities[cityName]->neighbours[k].city->getName(), neighbourCityName) == 0 &&
                     (cities[cityName]->neighbours[k].distance > current.distance)
                     ) {
@@ -143,6 +213,7 @@ void CitiesGraph::lookForNeighbours(char* cityName)
                     break;
                 }
                 else if (strcmp(cities[cityName]->neighbours[k].city->getName(), neighbourCityName) == 0) {
+					// Don't add the neighbour if it is already in the list
                     endOfSearch = true;
                     break;
                 }
@@ -155,13 +226,9 @@ void CitiesGraph::lookForNeighbours(char* cityName)
             // Add new neighbour
             AnotherCity newNeighbour(current.distance, cities[neighbourCityName]);
             cities[cityName]->neighbours.push_back(newNeighbour);
-            //std::cout << "\n142 | Add " << neighbourCityName << " to " << cityName << std::endl;
-
         }
-
         else if (map[current.y][current.x] == '#' || current.x == startCityPosX && current.y == startCityPosY) {
-
-            //visited[current.y][current.x] = true;
+			// If it is a road or the start city -> continue searching
             continueLookinfForNeighbour(queue, current);
         }
         visited[current.y][current.x] = true;
@@ -171,20 +238,17 @@ void CitiesGraph::lookForNeighbours(char* cityName)
 
 void CitiesGraph::continueLookinfForNeighbour(PrioritySpot& queue, spot& current)
 {
+	// Add roads and cities to the queue
     for (int n = -1; n < 2; n += 2) {
         if (current.x + n >= 0 && current.x + n < width
             && (map[current.y][current.x + n] == '#' || map[current.y][current.x + n] == '*')
-            //&& !visited[current.y][current.x + n]
             ) {
-
             queue.insert(spot(current.x + n, current.y, current.distance + 1));
         }
 
         if (current.y + n >= 0 && current.y + n < height
             && (map[current.y + n][current.x] == '#' || map[current.y + n][current.x] == '*')
-            //&& !visited[current.y + n][current.x]
             ) {
-
             queue.insert(spot(current.x, current.y + n, current.distance + 1));
         }
     }
@@ -212,6 +276,72 @@ void CitiesGraph::printCities()
             }
         }
     }
+}
+
+void CitiesGraph::dijkstra(char* startCity, char* endCity, int typeOfSearch)
+{
+    if (strcmp(startCity, endCity) == 0) {
+        std::cout << 0 << "\n";
+        return;
+    }
+
+    HashMap<AnotherCity* > graphCities;
+
+
+    graphCities.putValue(startCity, new AnotherCity(0, this->cities[startCity]));
+    graphCities.putValue(endCity, new AnotherCity(INT_MAX, this->cities[endCity]));
+
+    MinHeap queue;
+    queue.insert(graphCities[startCity]);
+    HashMap<bool> addedToQueue;
+
+    while (!queue.empty()) {
+        AnotherCity* current = queue.extractMin();
+        if (current->visited) {
+            continue;
+        }
+        current->visited = true;
+
+        for (int i = 0; i < current->city->neighbours.GetSize(); i++) {
+
+			// It it the first time we add the city to the queue and HashMap of "neighbours"
+            if (!graphCities.containsKey(current->city->neighbours[i].city->getName())
+                ) {
+                AnotherCity* newCity = new AnotherCity(current->distance + current->city->neighbours[i].distance,
+                                                        current->city->neighbours[i].city);
+              
+                graphCities.putValue(newCity->city->getName(), newCity);
+                queue.insert(newCity);
+                graphCities[newCity->city->getName()]->prev_city = current;
+            }
+            else if (graphCities[current->city->neighbours[i].city->getName()]->distance > current->distance + current->city->neighbours[i].distance
+                ) {
+				// If we found a shorter path to the city -> update the distance
+                graphCities[current->city->neighbours[i].city->getName()]->distance = current->distance + current->city->neighbours[i].distance;
+				// Update the queue with the new distance
+                queue.insert(graphCities[current->city->neighbours[i].city->getName()]);
+                graphCities[current->city->neighbours[i].city->getName()]->prev_city = current;
+            }
+        }
+    }
+	// Print the distance (and the path)
+    std::cout << graphCities[endCity]->distance;
+
+    if (typeOfSearch == 1) {
+        AnotherCity* current = graphCities[endCity];
+
+        // Iterate through the path and add the cities to the vector
+        Vector< char*> path(VECTOR_START_SIZE);
+        while (current->prev_city != nullptr) {
+            path.push_back(current->city->getName());
+            current = current->prev_city;
+        }
+        path.push_back(current->city->getName());
+        for (int i = path.GetSize() - 2; i > 0; i--) {
+            std::cout << " " << path[i];
+        }
+    }
+    std::cout << std::endl;
 }
 
 

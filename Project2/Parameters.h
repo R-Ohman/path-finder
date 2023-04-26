@@ -2,12 +2,10 @@
 #ifndef _PARAMETERS_H_
 #define _PARAMETERS_H_
 
+#define _CRT_SECURE_NO_WARNINGS
 #define HASHMAP_SIZE            5000
 #define VECTOR_START_SIZE       64
 #define CITY_NAME_BUFFER        64
-
-static int constructorCounter = 0;
-static int destructorCounter = 0;
 
 #include <iostream>
 #include "Vector.h"

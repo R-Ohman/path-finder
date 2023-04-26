@@ -8,15 +8,19 @@ class Vector {
     int size;
     int allocated_size;
     void reallocate(int new_size);
+    
 public:
     Vector() = delete;
     Vector(int size = VECTOR_START_SIZE);
     Vector(const Vector<T>& other);
     ~Vector();
+    
     Vector<T>& operator=(const Vector<T>& other);
+    T& operator [] (int index);
+    
     void push_back(T value);
     T pop_back();
-    T& operator [] (int index);
+    
     int GetSize();
     void clear();
     bool isEmpty();
@@ -27,9 +31,8 @@ public:
 
 
 template<typename T>
-Vector<T>::Vector(int size) : allocated_size(size), size(0), data(nullptr)
-{
-}
+Vector<T>::Vector(int size)
+    : allocated_size(size), size(0), data(nullptr) {}
 
 
 template<typename T>
@@ -43,7 +46,8 @@ Vector<T>::~Vector()
 
 
 template<typename T>
-Vector<T>::Vector(const Vector<T>& other) : size(other.size), allocated_size(other.allocated_size), data(nullptr)
+Vector<T>::Vector(const Vector<T>& other)
+    : size(other.size), allocated_size(other.allocated_size), data(nullptr)
 {
     if (allocated_size > 0) {
         data = new T[allocated_size];
@@ -59,9 +63,11 @@ Vector<T>& Vector<T>::operator=(const Vector<T>& other)
 {
     if (this != &other) {
         clear();
+        
         if (other.size > 0) {
             data = new T[other.size];
             allocated_size = other.size;
+            
             for (int i = 0; i < other.size; i++) {
                 data[i] = other.data[i];
             }
@@ -92,6 +98,7 @@ void Vector<T>::reallocate(int new_size)
 template<typename T>
 void Vector<T>::push_back(T value)
 {
+    // If it is the first push_back (memory isn't allocated)
     if (allocated_size && data == nullptr) {
         data = new T[allocated_size];
     }
@@ -107,6 +114,7 @@ T Vector<T>::pop_back()
     if (size < 1) {
         throw "Vector is empty";
     }
+    
     T last_value = data[--size];
     if (size > VECTOR_START_SIZE && 4 * (size) <= allocated_size) {
         reallocate(allocated_size / 2);

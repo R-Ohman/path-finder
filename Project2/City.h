@@ -1,13 +1,11 @@
 #pragma once
-
 #include "Parameters.h"
-
 
 class City
 {
 private:
     char name[CITY_NAME_BUFFER];
-    int posX, posY;
+	int posX, posY;
 
 public:
     City();
@@ -23,8 +21,6 @@ public:
     void setName(char* name);
     char* getName();
 
-    //void addNeighbour(City neighbour);
-
-    Vector<AnotherCity> neighbours;
+	Vector<AnotherCity> neighbours;     // Array of neighbours and flights (with distances)
     bool visited;
 };
