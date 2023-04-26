@@ -9,7 +9,6 @@ class Vector {
 
     
     int size;
-    int allocated_size;
     void reallocate(int new_size);
 
 
@@ -24,6 +23,7 @@ class Vector {
     Block* tail;
     
 public:
+    int allocated_size;
     Vector() = delete;
     Vector(int size = VECTOR_START_SIZE);
     Vector(const Vector<T>& other);
@@ -92,6 +92,9 @@ Vector<T>& Vector<T>::operator=(const Vector<T>& other)
 template<typename T>
 const T& Vector<T>::operator[](int index) const
 {
+    /*if (index == size - 1) {
+        std::cout << "Flag";
+    }*/
     Block* current = head;
     int block_index = index / VECTOR_BLOCK_SIZE;
     int offset = index % VECTOR_BLOCK_SIZE;
@@ -106,15 +109,20 @@ const T& Vector<T>::operator[](int index) const
 template<typename T>
 void Vector<T>::reallocate(int new_size)
 {
+	if (new_size < tail->occupiedSize) {
+		return;
+	}
 	//std::cout << "reallocate " << new_size << "\n";
     if (new_size > VECTOR_BLOCK_SIZE) {
-		tail->next = new Block();
+		tail->next = new Block;
 		tail = tail->next;
 		allocated_size += VECTOR_START_SIZE;
     //    std::cout << "new Block\n";
     }
     else {
-        allocated_size += new_size / 2;
+        allocated_size -= allocated_size % VECTOR_BLOCK_SIZE;
+		allocated_size += new_size;
+		//std::cout << "new size " << allocated_size << "\n";
         T* new_data = new T[new_size];
         if (new_data != nullptr) {
 			for (int i = 0; i < tail->occupiedSize; i++) {
@@ -133,16 +141,21 @@ void Vector<T>::reallocate(int new_size)
 template<typename T>
 void Vector<T>::push_back(T value)
 {
+    /*if (size == 8 && allocated_size == 8) {
+        std::cout << "Size 8 alloc 8 flag\n";
+    }*/
     if (allocated_size && head == nullptr) {
         head = new Block;
-		allocated_size = VECTOR_START_SIZE;
 		tail = head;
     }
-    if (tail->occupiedSize == allocated_size % VECTOR_BLOCK_SIZE) {
+  //  std::cout << "BEFORE Push back | Alloc size = " << allocated_size << " | Occupied size = " << tail->occupiedSize << "\n";
+    if (tail->occupiedSize % VECTOR_BLOCK_SIZE == allocated_size % VECTOR_BLOCK_SIZE
+        ) {
         reallocate(2 * tail->occupiedSize);
     }
 	size++;
     tail->data[tail->occupiedSize++] = value;
+  //  std::cout << "AFTER Push back | Alloc size = " << allocated_size << " | Occupied size = " << tail->occupiedSize << "\n";
 
 
 }
@@ -150,6 +163,7 @@ void Vector<T>::push_back(T value)
 template<typename T>
 T Vector<T>::pop_back()
 {
+   // std::cout << "BEFORE Pop back | Alloc size = " << allocated_size << " | Occupied size = " << tail->occupiedSize << "\n";
     if (size < 1) {
         throw "Vector is empty";
     }
@@ -165,18 +179,26 @@ T Vector<T>::pop_back()
         tail = current;
 		allocated_size -= VECTOR_START_SIZE;
     }
+	else if (size > VECTOR_START_SIZE && 4 * (tail->occupiedSize) <= allocated_size % VECTOR_BLOCK_SIZE) {
+        reallocate((allocated_size % VECTOR_BLOCK_SIZE) / 2);
+    }
+   // std::cout << "AFTER Pop back | Alloc size = " << allocated_size << " | Occupied size = " << tail->occupiedSize << "\n";
     return last_value;
 }
 
 template<typename T>
 T& Vector<T>::operator[](int index)
 {
-    Block* current = head;
-    while (index >= VECTOR_BLOCK_SIZE) {
+   /* if (size > VECTOR_BLOCK_SIZE && index == size - 1) {
+        std::cout << "Flag";
+    }*/
+	Block* current = head;
+	int block_index = index / VECTOR_BLOCK_SIZE;
+	int offset = index % VECTOR_BLOCK_SIZE;
+	for (int i = 0; i < block_index; i++) {
 		current = current->next;
-		index -= VECTOR_BLOCK_SIZE;
-    }
-	return current->data[index];
+	}
+	return current->data[offset];
 }
 
 template<typename T>

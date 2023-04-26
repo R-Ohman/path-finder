@@ -106,7 +106,7 @@ void CitiesGraph::lookForNeighbours(char* cityName)
 {
 	//static char cityName[CITY_NAME_BUFFER];
 	//strcpy_s(cityName2, cityName);
-	PrioritySpot queue;
+	static PrioritySpot queue;
 	//std::cout << "97 | " << cityName << std::endl;
 	int startCityPosX = cities[cityName]->getPosX();
 	int startCityPosY = cities[cityName]->getPosY();
@@ -164,6 +164,10 @@ void CitiesGraph::lookForNeighbours(char* cityName)
 			//visited[current.y][current.x] = true;
 			continueLookinfForNeighbour(queue, current);
 		}
+		/*if (current.x == 0 && current.y == 7 && startCityPosX == 12) {
+			std::cout << "Flag";
+		}*/
+
 		visited[current.y][current.x] = true;
 	}
 }

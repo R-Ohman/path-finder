@@ -20,6 +20,7 @@ private:
 		int getLeftChild(int i) { return 2 * i + 1; }
 		int getRightChild(int i) { return 2 * i + 2; }
 		void siftUp(int i) {
+			// WARN
 			while (i > 0 && heap[i].distance < heap[getParent(i)].distance) {
 				std::swap(heap[i], heap[getParent(i)]);
 				i = getParent(i);
@@ -56,17 +57,50 @@ private:
 		}
 
 	public:
-		PrioritySpot() : heap(VECTOR_START_SIZE) {}
+		PrioritySpot() : heap(VECTOR_BLOCK_SIZE) {}
 
 		void insert(spot value) {
 			heap.push_back(value);
+			/*std::cout << "BEFORE siftUp(): value (" << value.x << ", " << value.y << ")\n\t";
+			std::cout << "Size: " << heap.GetSize() << " | Allocated size: " << heap.allocated_size << " |\n";
+			std::cout << "\tHeap:\n";
+			for (int i = 0; i < heap.GetSize(); i++) {
+				std::cout << "\t\t[" << heap[i].x << ", " << heap[i].y << ")\n";
+			}*/
 			siftUp(heap.GetSize() - 1);
+
+			/*std::cout << "AFTER siftUp():\n\t";
+			std::cout << "Size: " << heap.GetSize() << " | Allocated size: " << heap.allocated_size << " |\n";
+			std::cout << "\tHeap:\n";
+			for (int i = 0; i < heap.GetSize(); i++) {
+				std::cout << "\t\t[" << heap[i].x << ", " << heap[i].y << ")\n";
+			}*/
 		}
 		spot extractMin() {
+
+			/*if (heap.GetSize() >= 8) {
+				std::cout << "Flag";
+			}*/
 			spot root = heap.front();
+			
+
+			/*std::cout << "BEFORE extractMin():\n\t";
+			std::cout << "Size: " << heap.GetSize() << " | Allocated size: " << heap.allocated_size << " | Front[" << root.x << ", " << root.y << ")\n";
+			std::cout << "\tHeap:\n";
+			for (int i = 0; i < heap.GetSize(); i++) {
+				std::cout << "\t\t[" << heap[i].x << ", " << heap[i].y << ")\n";
+			}*/
+			
 			std::swap(heap.front(), heap.back());
 			heap.pop_back();
 			siftDown();
+
+			/*std::cout << "AFTER extractMin():\n\t";
+			std::cout << "Size: " << heap.GetSize() << " | Allocated size: " << heap.allocated_size << " | Front[" << root.x << ", " << root.y << ")\n";
+			std::cout << "\tHeap:\n";
+			for (int i = 0; i < heap.GetSize(); i++) {
+				std::cout << "\t\t[" << heap[i].x << ", " << heap[i].y << ")\n";
+			}*/
 			return root;
 		}
 		bool empty() {

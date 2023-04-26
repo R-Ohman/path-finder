@@ -136,7 +136,7 @@ int main()
 
 	readFlights(graph);
 
-	//graph.printCities();
+	graph.printCities();
 	
 	readCommands(graph);
 
