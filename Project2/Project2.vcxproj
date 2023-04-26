@@ -139,7 +139,6 @@
     <ClInclude Include="HashMap.h" />
     <ClInclude Include="MinHeap.h" />
     <ClInclude Include="Parameters.h" />
-    <ClInclude Include="String.h" />
     <ClInclude Include="Vector.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

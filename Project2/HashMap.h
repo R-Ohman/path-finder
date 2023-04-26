@@ -10,7 +10,7 @@ private:
         Node* next;
         Node(char* k, T v) : value(v), next(nullptr) {
             for (int i = 0; i < CITY_NAME_BUFFER; i++) {
-				key[i] = k[i];
+                key[i] = k[i];
                 if (k[i] == '\0') {
                     break;
                 }
@@ -47,9 +47,9 @@ inline unsigned HashMap<T>::hash(char* key)
 {
     unsigned int hash = 0;
     for (size_t i = 0;; i++) {
-		if (key[i] == '\0') {
-			break;
-		}
+        if (key[i] == '\0') {
+            break;
+        }
         hash = hash * 31 + key[i];
     }
     return hash;
@@ -80,7 +80,7 @@ inline HashMap<T>::~HashMap()
 template<typename T>
 inline void HashMap<T>::putValue(char* key, T value)
 {
-//	std::cout << "putValue (" << key << ")\n";
+    //      std::cout << "putValue (" << key << ")\n";
     int index = hash(key) % table_size;
     Node* current = table[index];
     while (current != nullptr) {

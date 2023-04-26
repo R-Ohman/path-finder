@@ -54,13 +54,6 @@ public:
 
     AnotherCity* extractMin() {
 
-        /*std::cout << "Heap: " << std::endl;
-        for (int i = 0; i < heap.GetSize(); i++) {
-            if (heap[i]) {
-                std::cout << i << " " << heap[i]->distance << std::endl;
-            }
-        }*/
-
         AnotherCity* root = heap.front();
         std::swap(heap.front(), heap.back());
         heap.pop_back();
@@ -68,7 +61,7 @@ public:
 
         return root;
     }
-    
+
     bool empty() {
         return heap.isEmpty();
     }
