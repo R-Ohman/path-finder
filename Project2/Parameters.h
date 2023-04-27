@@ -4,8 +4,8 @@
 
 #define _CRT_SECURE_NO_WARNINGS
 #define HASHMAP_SIZE            5000
-#define VECTOR_START_SIZE       64
-#define CITY_NAME_BUFFER        64
+#define VECTOR_START_SIZE       16
+#define CITY_NAME_BUFFER        32
 
 #include <iostream>
 #include "Vector.h"

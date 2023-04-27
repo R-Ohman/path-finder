@@ -139,7 +139,15 @@ void CitiesGraph::addNeighbour(char* from, char* to, int distance)
   //  }
 	// Add the new neighbour
     //AnotherCity newNeighbour(distance, cities[to]);
-    cities[from]->neighbours.push_back(AnotherCity(distance, cities[to]));
+	static char last_from[CITY_NAME_BUFFER];
+    static Vector<AnotherCity>* neighbours;
+	if (strcmp(last_from, from) != 0) {
+		strcpy_s(last_from, from);
+		neighbours = &cities[from]->neighbours;
+	} 
+    neighbours->push_back(AnotherCity(distance, cities[to]));
+    
+    //cities[from]->neighbours.push_back(AnotherCity(distance, cities[to]));
 }
 
 

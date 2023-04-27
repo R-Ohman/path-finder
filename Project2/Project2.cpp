@@ -12,7 +12,7 @@ int main()
     int width, height;
     std::cin >> width >> height;
 
-    //auto start_time = std::chrono::high_resolution_clock::now();
+    auto start_time = std::chrono::high_resolution_clock::now();
     char** map = new char* [height];
     for (int i = 0; i < height; i++) {
         map[i] = new char[width];
@@ -27,21 +27,21 @@ int main()
             }
         }
     }
-    /*auto end_time = std::chrono::high_resolution_clock::now();
+    auto end_time = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
     std::cout << "READ MAP Execution time: " << duration.count() << " milliseconds" << std::endl;
 
-    auto start_time2 = std::chrono::high_resolution_clock::now();*/
+    auto start_time2 = std::chrono::high_resolution_clock::now();
     CitiesGraph graph(map, height, width);
-    /*auto end_time2 = std::chrono::high_resolution_clock::now();
+    auto end_time2 = std::chrono::high_resolution_clock::now();
     auto duration2 = std::chrono::duration_cast<std::chrono::milliseconds>(end_time2 - start_time2);
-    std::cout << "BUILD GRAPH Execution time: " << duration2.count() << " milliseconds" << std::endl;*/
+    std::cout << "BUILD GRAPH Execution time: " << duration2.count() << " milliseconds" << std::endl;
 
     auto start_time3 = std::chrono::high_resolution_clock::now();
     readFlights(graph);
     auto end_time3 = std::chrono::high_resolution_clock::now();
     auto duration3 = std::chrono::duration_cast<std::chrono::milliseconds>(end_time3 - start_time3);
-    //std::cout << "READ FLIGHTS Execution time: " << duration3.count() << " milliseconds" << std::endl;
+    std::cout << "READ FLIGHTS Execution time: " << duration3.count() << " milliseconds" << std::endl;
 
     ////graph.printCities();
 
@@ -49,7 +49,7 @@ int main()
     readCommands(graph);
     auto end_time4 = std::chrono::high_resolution_clock::now();
     auto duration4 = std::chrono::duration_cast<std::chrono::milliseconds>(end_time4 - start_time4);
-    //std::cout << "DO COMMANDS Execution time: " << duration4.count() << " milliseconds" << std::endl;
+    std::cout << "DO COMMANDS Execution time: " << duration4.count() << " milliseconds" << std::endl;
 
 }
 
@@ -66,6 +66,7 @@ void readFlights(CitiesGraph& graph)
     //char c = fgetc(stdin);
     char from[CITY_NAME_BUFFER], to[CITY_NAME_BUFFER];
     int time;
+    
     for (int i = 0; i < countOfFlights; i++) {
         std::fgets(line, BUFFER_SIZE, stdin);
         std::sscanf(line, "%s %s %d", from, to, &time);
