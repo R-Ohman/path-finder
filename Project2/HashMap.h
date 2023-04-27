@@ -8,8 +8,8 @@ private:
         char key[CITY_NAME_BUFFER];
         T value;
         Node* next;
-        
-        Node(char* k, T v) : value(v), next(nullptr) {
+        // change to "T"
+        Node(const char* k, const T& v) : value(v), next(nullptr) {
 			strcpy_s(key, k);
         }
     };
@@ -18,14 +18,15 @@ private:
     int table_size;     // HASHMAP_SIZE
 	int count;          // number of elements in the table
 
-    unsigned hash(char* key) const;
+    unsigned hash(const char* key) const;
 
 public:
     HashMap();
 
     ~HashMap();
 
-    void putValue(char* key, T value);
+    // change to T
+    void putValue(char* key, const T& value);
 
     bool containsKey(char* key) const;
 
@@ -33,7 +34,7 @@ public:
 
     int getSize() const;
 
-    T& operator [](char* key) const;
+    T& operator [](const char* key) const;
 
     Node** getTable() const {
         return table;
@@ -65,14 +66,12 @@ public:
 
 
 template<typename T>
-inline unsigned HashMap<T>::hash(char* key) const
+inline unsigned HashMap<T>::hash(const char* key) const
 {
     unsigned int hash = 0;
-    for (size_t i = 0;; i++) {
-        if (key[i] == '\0') {
-            break;
-        }
-        hash = hash * 31 + key[i];
+    const char* p = key;
+    while (*p) {
+        hash = hash * 31 + *p++;
     }
     return hash;
 }
@@ -99,7 +98,7 @@ inline HashMap<T>::~HashMap()
 }
 
 template<typename T>
-inline void HashMap<T>::putValue(char* key, T value)
+inline void HashMap<T>::putValue(char* key, const T& value)
 {
     int index = hash(key) % table_size;
     Node* current = table[index];
@@ -153,14 +152,14 @@ inline T HashMap<T>::getValue(char* key) const
 
 
 template<typename T>
-T& HashMap<T>::operator [](char* key) const
+T& HashMap<T>::operator [](const char* key) const
 {
     try {
         int index = hash(key) % table_size;
         Node* current = table[index];
         
         while (current != nullptr) {
-            if (strcmp(current->key, key) == 0) {
+			if (strcmp(current->key, key) == 0) {
                 return current->value;
             }
             current = current->next;

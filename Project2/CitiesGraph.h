@@ -27,6 +27,8 @@ private:
     void lookForNeighbours(char* cityName);
 	void continueLookinfForNeighbour(PrioritySpot& queue, spot& current) const;   // Add the neighbour spots of the current spot to the queue
 
+    void updateCity(AnotherCity* city, int distance, int visited, AnotherCity* prev);
+    
 public:
 	CitiesGraph(char** map, int h, int w);   // Make a graph from the given map
 

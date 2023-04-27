@@ -1,4 +1,7 @@
 #include "Parameters.h"
+#include <chrono>
+#define BUFFER_SIZE 128
+using namespace std;
 
 int AnotherCity::idCounter = 0;
 void readFlights(CitiesGraph& graph);
@@ -9,6 +12,7 @@ int main()
     int width, height;
     std::cin >> width >> height;
 
+    //auto start_time = std::chrono::high_resolution_clock::now();
     char** map = new char* [height];
     for (int i = 0; i < height; i++) {
         map[i] = new char[width];
@@ -23,29 +27,53 @@ int main()
             }
         }
     }
+    /*auto end_time = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+    std::cout << "READ MAP Execution time: " << duration.count() << " milliseconds" << std::endl;
 
+    auto start_time2 = std::chrono::high_resolution_clock::now();*/
     CitiesGraph graph(map, height, width);
+    /*auto end_time2 = std::chrono::high_resolution_clock::now();
+    auto duration2 = std::chrono::duration_cast<std::chrono::milliseconds>(end_time2 - start_time2);
+    std::cout << "BUILD GRAPH Execution time: " << duration2.count() << " milliseconds" << std::endl;*/
 
+    auto start_time3 = std::chrono::high_resolution_clock::now();
     readFlights(graph);
+    auto end_time3 = std::chrono::high_resolution_clock::now();
+    auto duration3 = std::chrono::duration_cast<std::chrono::milliseconds>(end_time3 - start_time3);
+    //std::cout << "READ FLIGHTS Execution time: " << duration3.count() << " milliseconds" << std::endl;
 
-    //graph.printCities();
+    ////graph.printCities();
 
+    auto start_time4 = std::chrono::high_resolution_clock::now();
     readCommands(graph);
+    auto end_time4 = std::chrono::high_resolution_clock::now();
+    auto duration4 = std::chrono::duration_cast<std::chrono::milliseconds>(end_time4 - start_time4);
+    //std::cout << "DO COMMANDS Execution time: " << duration4.count() << " milliseconds" << std::endl;
+
 }
 
 
 void readFlights(CitiesGraph& graph)
 {
     int countOfFlights;
-    std::cin >> countOfFlights;
+    char line[BUFFER_SIZE];
+    do {
+        std::fgets(line, BUFFER_SIZE, stdin);
+	} while (line[0] == '\n');
+    std::sscanf(line, "%d", &countOfFlights);
 
+    //char c = fgetc(stdin);
     char from[CITY_NAME_BUFFER], to[CITY_NAME_BUFFER];
     int time;
     for (int i = 0; i < countOfFlights; i++) {
-        std::cin >> from >> to >> time;
+        std::fgets(line, BUFFER_SIZE, stdin);
+        std::sscanf(line, "%s %s %d", from, to, &time);
         graph.addNeighbour(from, to, time);
     }
 }
+
+
 
 
 void readCommands(CitiesGraph& graph)

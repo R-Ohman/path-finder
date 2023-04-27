@@ -125,21 +125,21 @@ char* CitiesGraph::getCityName(int x, int y)
 
 void CitiesGraph::addNeighbour(char* from, char* to, int distance)
 {
-    for (int i = 0; i < cities[from]->neighbours.GetSize(); i++)
-    {
-		// If the city is already a neighbour -> update the distance
-        if (strcmp(cities[from]->neighbours[i].city->getName(), to) == 0)
-        {
-            if (cities[from]->neighbours[i].distance > distance)
-            {
-                cities[from]->neighbours[i].distance = distance;
-            }
-            return;
-        }
-    }
+  //  for (int i = 0; i < cities[from]->neighbours.GetSize(); i++)
+  //  {
+		//// If the city is already a neighbour -> update the distance
+  //      if (strcmp(cities[from]->neighbours[i].city->getName(), to) == 0)
+  //      {
+  //          if (cities[from]->neighbours[i].distance > distance)
+  //          {
+  //              cities[from]->neighbours[i].distance = distance;
+  //          }
+  //          return;
+  //      }
+  //  }
 	// Add the new neighbour
-    AnotherCity newNeighbour(distance, cities[to]);
-    cities[from]->neighbours.push_back(newNeighbour);
+    //AnotherCity newNeighbour(distance, cities[to]);
+    cities[from]->neighbours.push_back(AnotherCity(distance, cities[to]));
 }
 
 
@@ -251,6 +251,13 @@ void CitiesGraph::continueLookinfForNeighbour(PrioritySpot& queue, spot& current
     }
 }
 
+void CitiesGraph::updateCity(AnotherCity* city, int distance, int visited, AnotherCity* prev)
+{
+	city->distance = distance;
+	city->visited = visited;
+	city->prev_city = prev;
+}
+
 
 void CitiesGraph::printCities()
 {
@@ -301,21 +308,27 @@ void CitiesGraph::dijkstra(char* startCity, char* endCity, int typeOfSearch)
 
     while (!queue.empty()) {
         AnotherCity* current = queue.extractMin();
+        
         if (current->visited) {
             continue;
         }
         current->visited = true;
         
         for (int i = 0; i < current->city->neighbours.GetSize(); i++) {
-            if (graphCities[current->city->neighbours[i].city->getName()]->distance > current->distance + current->city->neighbours[i].distance
+			AnotherCity* neighbour = graphCities[current->city->neighbours[i].city->getName()];
+            if (neighbour->distance > current->distance + current->city->neighbours[i].distance
                 ) {
 				// If we found a shorter path to the city -> update the distance
-                graphCities[current->city->neighbours[i].city->getName()]->distance = current->distance + current->city->neighbours[i].distance;
+                //graphCities[current->city->neighbours[i].city->getName()]->distance = current->distance + current->city->neighbours[i].distance;
 				// Update the queue with the new distance
-				graphCities[current->city->neighbours[i].city->getName()]->visited = false;
-                queue.insert(graphCities[current->city->neighbours[i].city->getName()]);
-                graphCities[current->city->neighbours[i].city->getName()]->prev_city = current;
-            }
+                neighbour->distance = current->distance + current->city->neighbours[i].distance;
+                neighbour->visited = false;
+                neighbour->prev_city = current;
+               // updateCity(neighbour, current->distance + current->city->neighbours[i].distance, false, current);
+				//graphCities[current->city->neighbours[i].city->getName()]->visited = false;
+                queue.insert(neighbour);
+                //graphCities[current->city->neighbours[i].city->getName()]->prev_city = current;
+             }
         }
     }
 	// Print the distance (and the path)
