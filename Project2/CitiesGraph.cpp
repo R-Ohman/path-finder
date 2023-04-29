@@ -1,6 +1,5 @@
 ﻿#include "CitiesGraph.h"
 
-
 // Min heap for spots
 class CitiesGraph::PrioritySpot {
 private:
@@ -125,20 +124,7 @@ char* CitiesGraph::getCityName(int x, int y)
 
 void CitiesGraph::addNeighbour(char* from, char* to, int distance)
 {
-  //  for (int i = 0; i < cities[from]->neighbours.GetSize(); i++)
-  //  {
-		//// If the city is already a neighbour -> update the distance
-  //      if (strcmp(cities[from]->neighbours[i].city->getName(), to) == 0)
-  //      {
-  //          if (cities[from]->neighbours[i].distance > distance)
-  //          {
-  //              cities[from]->neighbours[i].distance = distance;
-  //          }
-  //          return;
-  //      }
-  //  }
 	// Add the new neighbour
-    //AnotherCity newNeighbour(distance, cities[to]);
 	static char last_from[CITY_NAME_BUFFER];
     static Vector<AnotherCity>* neighbours;
 	if (strcmp(last_from, from) != 0) {
@@ -146,8 +132,6 @@ void CitiesGraph::addNeighbour(char* from, char* to, int distance)
 		neighbours = &cities[from]->neighbours;
 	} 
     neighbours->push_back(AnotherCity(distance, cities[to]));
-    
-    //cities[from]->neighbours.push_back(AnotherCity(distance, cities[to]));
 }
 
 
@@ -259,13 +243,6 @@ void CitiesGraph::continueLookinfForNeighbour(PrioritySpot& queue, spot& current
     }
 }
 
-void CitiesGraph::updateCity(AnotherCity* city, int distance, int visited, AnotherCity* prev)
-{
-	city->distance = distance;
-	city->visited = visited;
-	city->prev_city = prev;
-}
-
 
 void CitiesGraph::printCities()
 {
@@ -276,12 +253,12 @@ void CitiesGraph::printCities()
                 char* cityName = getCityName(j, i);
 
                 std::cout << "City: " << cities[cityName]->getName() << "(" << cities[cityName]->getPosX() << ", " << cities[cityName]->getPosY() << ")" << "\n\t";
-                for (int j = 0; j < cities[cityName]->neighbours.GetSize(); j++) {
-                    if (j == 0) {
+                for (int k = 0; k < cities[cityName]->neighbours.GetSize(); k++) {
+                    if (k == 0) {
                         std::cout << "Neighbours:\n\t\t";
                     }
-                    std::cout << cities[cityName]->neighbours[j].city->getName() << "(" << cities[cityName]->neighbours[j].distance << ")\n";
-                    if (j < cities[cityName]->neighbours.GetSize() - 1) {
+                    std::cout << cities[cityName]->neighbours[k].city->getName() << "(" << cities[cityName]->neighbours[k].distance << ")\n";
+                    if (k < cities[cityName]->neighbours.GetSize() - 1) {
                         std::cout << "\t\t";
                     }
                 }
@@ -289,6 +266,7 @@ void CitiesGraph::printCities()
         }
     }
 }
+
 
 void CitiesGraph::dijkstra(char* startCity, char* endCity, int typeOfSearch)
 {
@@ -326,16 +304,11 @@ void CitiesGraph::dijkstra(char* startCity, char* endCity, int typeOfSearch)
 			AnotherCity* neighbour = graphCities[current->city->neighbours[i].city->getName()];
             if (neighbour->distance > current->distance + current->city->neighbours[i].distance
                 ) {
-				// If we found a shorter path to the city -> update the distance
-                //graphCities[current->city->neighbours[i].city->getName()]->distance = current->distance + current->city->neighbours[i].distance;
-				// Update the queue with the new distance
+				// If we found a shorter path to the city -> update the city
                 neighbour->distance = current->distance + current->city->neighbours[i].distance;
                 neighbour->visited = false;
                 neighbour->prev_city = current;
-               // updateCity(neighbour, current->distance + current->city->neighbours[i].distance, false, current);
-				//graphCities[current->city->neighbours[i].city->getName()]->visited = false;
                 queue.insert(neighbour);
-                //graphCities[current->city->neighbours[i].city->getName()]->prev_city = current;
              }
         }
     }
@@ -402,9 +375,9 @@ CitiesGraph::CitiesGraph(const CitiesGraph& other) : height(other.height), width
 
 CitiesGraph& CitiesGraph::operator=(const CitiesGraph& other)
 {
-    if (this != &other) // avoid self-assignment
+    if (this != &other)
     {
-        // delete existing data
+		// Delete the old memory
         for (int i = 0; i < height; i++) {
             delete[] map[i];
             delete[] visited[i];
@@ -412,12 +385,10 @@ CitiesGraph& CitiesGraph::operator=(const CitiesGraph& other)
         delete[] map;
         delete[] visited;
 
-        // copy data from other object
         height = other.height;
         width = other.width;
         cities = other.cities;
 
-        // allocate new memory for map and visited arrays
         map = new char* [height];
         visited = new bool* [height];
         for (int i = 0; i < height; i++) {

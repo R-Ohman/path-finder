@@ -8,7 +8,6 @@ private:
         char key[CITY_NAME_BUFFER];
         T value;
         Node* next;
-        // change to "T"
         Node(const char* k, const T& v) : value(v), next(nullptr) {
 			strcpy_s(key, k);
         }
@@ -24,14 +23,10 @@ public:
     HashMap();
 
     ~HashMap();
-
-    // change to T
+    
     void putValue(char* key, const T& value);
-
     bool containsKey(char* key) const;
-
     T getValue(char* key) const;
-
     int getSize() const;
 
     T& operator [](const char* key) const;
@@ -43,7 +38,6 @@ public:
     int getTableSize() const {
         return table_size;
     }
-
 
     class Iterator;
 
@@ -59,9 +53,6 @@ public:
     Iterator end() const {
         return Iterator(nullptr, nullptr, table, table_size);
     }
-
-
-
 };
 
 

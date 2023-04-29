@@ -27,16 +27,11 @@ private:
     void lookForNeighbours(char* cityName);
 	void continueLookinfForNeighbour(PrioritySpot& queue, spot& current) const;   // Add the neighbour spots of the current spot to the queue
 
-    void updateCity(AnotherCity* city, int distance, int visited, AnotherCity* prev);
-    
 public:
 	CitiesGraph(char** map, int h, int w);   // Make a graph from the given map
 
-
 	void addNeighbour(char* from, char* to, int distance);  // Add a flight between two cities
-
     void printCities();
-
     void dijkstra(char* startCity, char* endCity, int typeOfSearch);
 
     CitiesGraph(const CitiesGraph& other);
