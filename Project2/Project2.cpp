@@ -57,22 +57,44 @@ void readFlights(CitiesGraph& graph)
 {
     int countOfFlights;
     char line[BUFFER_SIZE];
+
     do {
         std::fgets(line, BUFFER_SIZE, stdin);
-	} while (line[0] == '\n');
-    std::sscanf(line, "%d", &countOfFlights);
+    } while (line[0] == '\n');
 
-    char from[CITY_NAME_BUFFER], to[CITY_NAME_BUFFER];
+    char* endptr = nullptr;
+	// Convert string to int
+    countOfFlights = std::strtol(line, &endptr, 10);
+
+    char* p = endptr;
+    char* from = nullptr, * to = nullptr;
     int time;
-    
+
     for (int i = 0; i < countOfFlights; i++) {
         std::fgets(line, BUFFER_SIZE, stdin);
-        std::sscanf(line, "%s %s %d", from, to, &time);
+        p = line;
+
+        from = p;
+        // Look for the end of the first world
+        while (*p != ' ') {
+            ++p;
+        }
+        *p = '\0';
+
+        
+        to = ++p;
+		// Look for the end of the second world
+        while (*p != ' ') {
+            ++p;
+        }
+        *p = '\0';
+        
+		// Convert string to int
+		time = std::strtol(++p, &p, 10);
+
         graph.addNeighbour(from, to, time);
     }
 }
-
-
 
 
 void readCommands(CitiesGraph& graph)

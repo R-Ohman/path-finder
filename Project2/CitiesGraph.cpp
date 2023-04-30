@@ -5,9 +5,9 @@ class CitiesGraph::PrioritySpot {
 private:
     Vector<spot> heap;
 
-    int getParent(int i) { return (i - 1) / 2; }
-    int getLeftChild(int i) { return 2 * i + 1; }
-    int getRightChild(int i) { return 2 * i + 2; }
+    static int getParent(int i) { return (i - 1) / 2; }
+    static int getLeftChild(int i) { return 2 * i + 1; }
+    static int getRightChild(int i) { return 2 * i + 2; }
     
     void siftUp(int i)
     {
@@ -244,31 +244,31 @@ void CitiesGraph::continueLookinfForNeighbour(PrioritySpot& queue, spot& current
 }
 
 
-void CitiesGraph::printCities()
-{
-    for (int i = 0; i < height; i++) {
-        for (int j = 0; j < width; j++) {
-            // City is found
-            if (map[i][j] == '*') {
-                char* cityName = getCityName(j, i);
+//void CitiesGraph::printCities()
+//{
+//    for (int i = 0; i < height; i++) {
+//        for (int j = 0; j < width; j++) {
+//            // City is found
+//            if (map[i][j] == '*') {
+//                char* cityName = getCityName(j, i);
+//
+//                std::cout << "City: " << cities[cityName]->getName() << "(" << cities[cityName]->getPosX() << ", " << cities[cityName]->getPosY() << ")" << "\n\t";
+//                for (int k = 0; k < cities[cityName]->neighbours.GetSize(); k++) {
+//                    if (k == 0) {
+//                        std::cout << "Neighbours:\n\t\t";
+//                    }
+//                    std::cout << cities[cityName]->neighbours[k].city->getName() << "(" << cities[cityName]->neighbours[k].distance << ")\n";
+//                    if (k < cities[cityName]->neighbours.GetSize() - 1) {
+//                        std::cout << "\t\t";
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}
 
-                std::cout << "City: " << cities[cityName]->getName() << "(" << cities[cityName]->getPosX() << ", " << cities[cityName]->getPosY() << ")" << "\n\t";
-                for (int k = 0; k < cities[cityName]->neighbours.GetSize(); k++) {
-                    if (k == 0) {
-                        std::cout << "Neighbours:\n\t\t";
-                    }
-                    std::cout << cities[cityName]->neighbours[k].city->getName() << "(" << cities[cityName]->neighbours[k].distance << ")\n";
-                    if (k < cities[cityName]->neighbours.GetSize() - 1) {
-                        std::cout << "\t\t";
-                    }
-                }
-            }
-        }
-    }
-}
 
-
-void CitiesGraph::dijkstra(char* startCity, char* endCity, int typeOfSearch)
+void CitiesGraph::dijkstra(char* startCity, char* endCity, int typeOfSearch) const
 {
     if (strcmp(startCity, endCity) == 0) {
         std::cout << 0 << "\n";
@@ -317,7 +317,6 @@ void CitiesGraph::dijkstra(char* startCity, char* endCity, int typeOfSearch)
 
     if (typeOfSearch == 1) {
         AnotherCity* current = graphCities[endCity];
-        int ctr = 0;
         
         // Iterate through the path and add the cities to the vector
         Vector< char*> path(VECTOR_START_SIZE);

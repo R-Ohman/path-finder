@@ -17,7 +17,7 @@ private:
     int table_size;     // HASHMAP_SIZE
 	int count;          // number of elements in the table
 
-    unsigned hash(const char* key) const;
+    static unsigned hash(const char* key);
 
 public:
     HashMap();
@@ -57,7 +57,7 @@ public:
 
 
 template<typename T>
-inline unsigned HashMap<T>::hash(const char* key) const
+inline unsigned HashMap<T>::hash(const char* key)
 {
     unsigned int hash = 0;
     const char* p = key;

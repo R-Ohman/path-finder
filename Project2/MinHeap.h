@@ -5,9 +5,9 @@ class MinHeap {
 private:
     Vector<AnotherCity*> heap;
     
-    int getParent(int i) const { return (i - 1) / 2; }
-    int getLeftChild(int i) const { return 2 * i + 1; }
-    int getRightChild(int i) const { return 2 * i + 2; }
+    static int getParent(int i) { return (i - 1) / 2; }
+    static int getLeftChild(int i) { return 2 * i + 1; }
+    static int getRightChild(int i) { return 2 * i + 2; }
 
     void siftUp(int i)
     {

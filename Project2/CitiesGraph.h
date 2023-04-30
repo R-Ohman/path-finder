@@ -31,8 +31,8 @@ public:
 	CitiesGraph(char** map, int h, int w);   // Make a graph from the given map
 
 	void addNeighbour(char* from, char* to, int distance);  // Add a flight between two cities
-    void printCities();
-    void dijkstra(char* startCity, char* endCity, int typeOfSearch);
+    //void printCities();
+    void dijkstra(char* startCity, char* endCity, int typeOfSearch) const;
 
     CitiesGraph(const CitiesGraph& other);
     CitiesGraph& operator=(const CitiesGraph& other);
