@@ -25,3 +25,42 @@ For each query, the output should be as follows:
 - If the query type is zero, output one line with the number representing the shortest travel time between the cities.
 - If the query type is one, output one line with the number representing the shortest travel time between the cities, followed by the intermediate cities (excluding the starting and ending cities) in the order they were visited, separated by spaces.
 
+## Example
+
+### Input:
+```
+20 20
+.........GDANSK.....
+........*...........
+........#...........
+........#...........
+*##################.
+#SZCZECIN.........#.
+#.................#.
+##................#.
+.############*#####.
+.#...WARSZAWA.......
+.#..................
+.#############......
+.#...........#......
+.#..WROCLAW.##......
+.#..*.......*.......
+.####.......#KIELCE.
+......*##.#########.
+.OPOLE..#.*.......#.
+........#.KRAKOW..#.
+........###########.
+0
+3
+KIELCE KRAKOW 0
+KRAKOW GDANSK 0
+KRAKOW GDANSK 1
+```
+
+### Output:
+```
+5
+40
+40 KIELCE SZCZECIN
+```
+
