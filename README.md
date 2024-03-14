@@ -64,3 +64,16 @@ KRAKOW GDANSK 1
 40 KIELCE SZCZECIN
 ```
 
+### Input (Example/9.in):
+![image](https://github.com/R-Ohman/path-finder/assets/113181317/4421a259-7c59-4f98-ba5c-eba6eef2e9b7)
+
+### Output (Example/9.out):
+```
+1549
+2258
+931
+784
+1610
+935
+```
+Time: <0.25s
